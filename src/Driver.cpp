@@ -870,14 +870,20 @@ int Driver::readRaw(uint8_t* buffer, int out_buffer_size,
 
         if (c > 0) {
             last_char = now;
+            
             if (!received_bytes) {
                 global_deadline = now + packet_timeout;
                 received_bytes = true;
             }
-            for (IOListener* it: m_listeners)
+            
+            for (IOListener* it: m_listeners) {
                 it->readData(buffer + buffer_fill, c);
+            }
+            
+            buffer_fill += c;
+        } else {
+            break;
         }
-        buffer_fill += c;
     }
 
     return buffer_fill;

@@ -34,13 +34,15 @@ namespace iodrivers_base
          * The default implementation returns INVALID_FD
          */
         virtual int getFileDescriptor() const;
+        
+        bool m_silent_timeout = false;
     };
 
     /** Implementation of IOStream for file descriptors */
     class FDStream : public IOStream
     {
         bool m_auto_close;
-
+        
     protected:
         bool m_has_eof;
         bool m_eof;

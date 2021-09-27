@@ -49,7 +49,7 @@ void FDStream::waitRead(base::Time const& timeout)
     int ret = select(m_fd + 1, &set, NULL, NULL, &timeout_spec);
     if (ret < 0 && errno != EINTR)
         throw UnixError("waitRead(): error in select()");
-    else if (ret == 0)
+    else if (!m_silent_timeout && ret == 0)
         throw TimeoutError(TimeoutError::NONE, "waitRead(): timeout");
 }
 void FDStream::waitWrite(base::Time const& timeout)
@@ -62,7 +62,7 @@ void FDStream::waitWrite(base::Time const& timeout)
     int ret = select(m_fd + 1, NULL, &set, NULL, &timeout_spec);
     if (ret < 0 && errno != EINTR)
         throw UnixError("waitWrite(): error in select()");
-    else if (ret == 0)
+    else if (!m_silent_timeout && ret == 0)
         throw TimeoutError(TimeoutError::NONE, "waitWrite(): timeout");
 }
 size_t FDStream::read(uint8_t* buffer, size_t buffer_size)
